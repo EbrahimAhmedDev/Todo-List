@@ -21,6 +21,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 function TodoList() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [dialogTodo, setDialogTodo] = useState(null);
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
   const { todos, setTodos } = useContext(TodosContext);
 
@@ -87,8 +88,39 @@ function TodoList() {
     handleDeleteDialogClose();
   };
 
+  function openUpdateDialog(todo) {
+    setDialogTodo(todo);
+    setShowUpdateDialog(true);
+  }
+
+  // const handleUpdateClick = () => {
+  //   setUpdatedTodo({ title: todo.title, details: todo.details });
+  //   setShowUpdateDialog(true);
+  // };
+
+  const handleUpdateConfirm = () => {
+    const updatedTodos = todos.map((t) =>
+      t.id === dialogTodo.id
+        ? { ...t, title: dialogTodo.title, details: dialogTodo.details }
+        : t
+    );
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+
+    handleUpdateClose();
+  };
+
+  const handleUpdateClose = () => {
+    setShowUpdateDialog(false);
+  };
+
   const todosJsx = todosToBeRendered.map((task) => (
-    <Todo key={task.id} todo={task} showDelete={openDeleteDialog} />
+    <Todo
+      key={task.id}
+      todo={task}
+      showDelete={openDeleteDialog}
+      showUpdate={openUpdateDialog}
+    />
   ));
   return (
     <>
@@ -116,6 +148,107 @@ function TodoList() {
         </DialogActions>
       </Dialog>
       {/* ==== DELETE DIALOG ==== */}
+      {/* UPADATE DIALOG */}
+      {/* <Dialog
+        sx={{ direction: "rtl" }}
+        open={showUpdateDialog}
+        onClose={handleUpdateClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">تعديل المهمه </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="email"
+            label="عنوان المهمه"
+            fullWidth
+            variant="standard"
+            value={dialogTodo.title}
+            onChange={(e) =>
+              setDialogTodo({ ...dialogTodo, title: e.target.value })
+            }
+          />
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="details"
+            name="details"
+            label="التفاصيل"
+            fullWidth
+            variant="standard"
+            multiline
+            minRows={3}
+            maxRows={10}
+            value={dialogTodo.details}
+            onChange={(e) =>
+              setDialogTodo({ ...dialogTodo, details: e.target.value })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdateClose}>اغلاق</Button>
+          <Button autoFocus onClick={handleUpdateConfirm}>
+            تأكيد
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+      {dialogTodo && (
+        <Dialog
+          sx={{ direction: "rtl" }}
+          open={showUpdateDialog}
+          onClose={handleUpdateClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle>تعديل المهمه </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="email"
+              label="عنوان المهمه"
+              fullWidth
+              variant="standard"
+              value={dialogTodo.title}
+              onChange={(e) =>
+                setDialogTodo({ ...dialogTodo, title: e.target.value })
+              }
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="details"
+              name="details"
+              label="التفاصيل"
+              fullWidth
+              variant="standard"
+              multiline
+              minRows={3}
+              maxRows={10}
+              value={dialogTodo.details}
+              onChange={(e) =>
+                setDialogTodo({ ...dialogTodo, details: e.target.value })
+              }
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleUpdateClose}>اغلاق</Button>
+            <Button autoFocus onClick={handleUpdateConfirm}>
+              تأكيد
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
+      {/* ==== UPADATE DIALOG ==== */}
       <Container maxWidth="sm">
         <Card
           sx={{ minWidth: 275, textAlign: "center" }}

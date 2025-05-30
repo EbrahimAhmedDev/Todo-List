@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -30,14 +30,14 @@ const customStyleForIconsBtn = (color) => {
   };
 };
 
-const Todo = ({ todo, showDelete }) => {
+const Todo = ({ todo, showDelete, showUpdate }) => {
   //context
   const { todos, setTodos } = useContext(TodosContext);
 
   // state
   // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const [updatedTodo, setUpdatedTodo] = useState({ title: "", details: "" });
+  // const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  // const [updatedTodo, setUpdatedTodo] = useState({ title: "", details: "" });
 
   // event handlers
 
@@ -54,78 +54,11 @@ const Todo = ({ todo, showDelete }) => {
   };
 
   const handleUpdateClick = () => {
-    setUpdatedTodo({ title: todo.title, details: todo.details });
-    setShowUpdateDialog(true);
-  };
-
-  const handleUpdateConfirm = () => {
-    const updatedTodos = todos.map((t) =>
-      t.id === todo.id
-        ? { ...t, title: updatedTodo.title, details: updatedTodo.details }
-        : t
-    );
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-
-    handleUpdateClose();
-  };
-
-  const handleUpdateClose = () => {
-    setShowUpdateDialog(false);
+    showUpdate(todo);
   };
 
   return (
     <>
-      {/* UPADATE DIALOG */}
-      <Dialog
-        sx={{ direction: "rtl" }}
-        open={showUpdateDialog}
-        onClose={handleUpdateClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">تعديل المهمه </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="عنوان المهمه"
-            fullWidth
-            variant="standard"
-            value={updatedTodo.title}
-            onChange={(e) =>
-              setUpdatedTodo({ ...updatedTodo, title: e.target.value })
-            }
-          />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="details"
-            name="details"
-            label="التفاصيل"
-            fullWidth
-            variant="standard"
-            multiline
-            minRows={3}
-            maxRows={10}
-            value={updatedTodo.details}
-            onChange={(e) =>
-              setUpdatedTodo({ ...updatedTodo, details: e.target.value })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdateClose}>اغلاق</Button>
-          <Button autoFocus onClick={handleUpdateConfirm}>
-            تأكيد
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* ==== UPADATE DIALOG ==== */}
       <Card
         sx={{
           minWidth: 275,
