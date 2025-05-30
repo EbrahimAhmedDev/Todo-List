@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -14,14 +14,23 @@ import { v4 as uuidv4 } from "uuid";
 
 function TodoList() {
   const { todos, setTodos } = useContext(TodosContext);
-  // const [all, setAll] = useState(true);
-  // const [done, setDone] = useState(false);
-  // const [notDone, setNotDone] = useState(false);
 
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
-  const completedTodos = todos.filter((t) => t.isCompleted);
-  const notCompletedTodos = todos.filter((t) => !t.isCompleted);
+
+  const completedTodos = useMemo(() => {
+    return todos.filter((t) => {
+      console.log("completed todos calling");
+      return t.isCompleted;
+    });
+  }, [todos]);
+
+  const notCompletedTodos = useMemo(() => {
+    return todos.filter((t) => {
+      console.log("NOT completed todos calling");
+      return !t.isCompleted;
+    });
+  }, [todos]);
 
   let todosToBeRendered = todos;
 
@@ -40,7 +49,7 @@ function TodoList() {
   // get todos from local storage
   useEffect(() => {
     console.log("Calling");
-    const storageTodos = JSON.parse(localStorage.getItem("todos"));
+    const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
     setTodos(storageTodos);
   }, []);
   const changeDisplayedType = (e) => setDisplayedTodosType(e.target.value);
