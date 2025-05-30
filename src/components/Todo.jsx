@@ -30,12 +30,12 @@ const customStyleForIconsBtn = (color) => {
   };
 };
 
-const Todo = ({ todo }) => {
+const Todo = ({ todo, showDelete }) => {
   //context
   const { todos, setTodos } = useContext(TodosContext);
 
   // state
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [updatedTodo, setUpdatedTodo] = useState({ title: "", details: "" });
 
@@ -50,7 +50,7 @@ const Todo = ({ todo }) => {
   };
 
   const handleDeleteClick = () => {
-    setShowDeleteDialog(true);
+    showDelete(todo);
   };
 
   const handleUpdateClick = () => {
@@ -58,12 +58,6 @@ const Todo = ({ todo }) => {
     setShowUpdateDialog(true);
   };
 
-  const handleDeleteConfirm = () => {
-    const updatedTodos = todos.filter((t) => t.id !== todo.id);
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    handleDeleteDialogClose();
-  };
   const handleUpdateConfirm = () => {
     const updatedTodos = todos.map((t) =>
       t.id === todo.id
@@ -76,43 +70,12 @@ const Todo = ({ todo }) => {
     handleUpdateClose();
   };
 
-  const handleDeleteDialogClose = () => {
-    setShowDeleteDialog(false);
-  };
   const handleUpdateClose = () => {
     setShowUpdateDialog(false);
   };
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
   return (
     <>
-      {/* DELETE DIALOG */}
-      <Dialog
-        sx={{ direction: "rtl" }}
-        open={showDeleteDialog}
-        onClose={handleDeleteDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          هل انت متاكد من حذف المهمه ؟؟؟
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            لا يمكنك التراجع عن الحذف بعد اتمامه
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteDialogClose}>اغلاق</Button>
-          <Button autoFocus onClick={handleDeleteConfirm}>
-            نعم قم بالحذف
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* ==== DELETE DIALOG ==== */}
       {/* UPADATE DIALOG */}
       <Dialog
         sx={{ direction: "rtl" }}

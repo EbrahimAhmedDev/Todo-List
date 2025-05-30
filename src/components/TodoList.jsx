@@ -11,8 +11,17 @@ import TextField from "@mui/material/TextField";
 import Todo from "./Todo";
 import { TodosContext } from "../contexts/todosContext";
 import { v4 as uuidv4 } from "uuid";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+// import TextField from "@mui/material/TextField";
 
 function TodoList() {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [dialogTodo, setDialogTodo] = useState(null);
+
   const { todos, setTodos } = useContext(TodosContext);
 
   const [titleInput, setTitleInput] = useState("");
@@ -42,10 +51,6 @@ function TodoList() {
     todosToBeRendered = todos;
   }
 
-  const todosJsx = todosToBeRendered.map((task) => (
-    <Todo key={task.id} todo={task} />
-  ));
-
   // get todos from local storage
   useEffect(() => {
     console.log("Calling");
@@ -66,9 +71,51 @@ function TodoList() {
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
   }
+  // handlers
+  function openDeleteDialog(todo) {
+    setDialogTodo(todo);
+    setShowDeleteDialog(true);
+  }
+  const handleDeleteDialogClose = () => {
+    setShowDeleteDialog(false);
+  };
 
+  const handleDeleteConfirm = () => {
+    const updatedTodos = todos.filter((t) => t.id !== dialogTodo.id);
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    handleDeleteDialogClose();
+  };
+
+  const todosJsx = todosToBeRendered.map((task) => (
+    <Todo key={task.id} todo={task} showDelete={openDeleteDialog} />
+  ));
   return (
     <>
+      {/* DELETE DIALOG */}
+      <Dialog
+        sx={{ direction: "rtl" }}
+        open={showDeleteDialog}
+        onClose={handleDeleteDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          هل انت متاكد من حذف المهمه ؟؟؟
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            لا يمكنك التراجع عن الحذف بعد اتمامه
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose}>اغلاق</Button>
+          <Button autoFocus onClick={handleDeleteConfirm}>
+            نعم قم بالحذف
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* ==== DELETE DIALOG ==== */}
       <Container maxWidth="sm">
         <Card
           sx={{ minWidth: 275, textAlign: "center" }}
