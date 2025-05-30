@@ -40,7 +40,7 @@ function TodoList() {
   // get todos from local storage
   useEffect(() => {
     console.log("Calling");
-    const storageTodos = JSON.parse(localStorage.getItem("todos"));
+    const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
     setTodos(storageTodos);
   }, []);
   const changeDisplayedType = (e) => setDisplayedTodosType(e.target.value);
