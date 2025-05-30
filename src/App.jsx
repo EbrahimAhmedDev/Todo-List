@@ -3,6 +3,7 @@ import TodoList from "./components/TodoList";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { TodosContext } from "./contexts/todosContext";
+import { ToastContext } from "./contexts/ToastContext";
 
 // others
 // import { v4 as uuidv4 } from "uuid";
@@ -42,33 +43,37 @@ const theme = createTheme({
 // ];
 const App = () => {
   const [todos, setTodos] = useState([]);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
-  function showHideToast() {
+  function showHideToast(message) {
     setOpen(true);
+    setMessage(message);
     setTimeout(() => {
       setOpen(false);
-    }, 2000);
+    }, 4000);
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <div
-        className="app"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          background: "#191b1f",
-          height: "100vh",
-          direction: "rtl",
-        }}
-      >
-        <MySnackBar open={open} />
-        <TodosContext.Provider value={{ todos, setTodos }}>
-          <TodoList />
-        </TodosContext.Provider>
-      </div>
+      <ToastContext.Provider value={{ showHideToast }}>
+        <div
+          className="app"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "#191b1f",
+            height: "100vh",
+            direction: "rtl",
+          }}
+        >
+          <MySnackBar open={open} message={message} />
+          <TodosContext.Provider value={{ todos, setTodos }}>
+            <TodoList />
+          </TodosContext.Provider>
+        </div>
+      </ToastContext.Provider>
     </ThemeProvider>
   );
 };

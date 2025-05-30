@@ -8,14 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { TodosContext } from "../contexts/todosContext";
-import Button from "@mui/material/Button";
-
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+import { ToastContext } from "../contexts/ToastContext";
 
 const customStyleForIconsBtn = (color) => {
   return {
@@ -33,11 +26,8 @@ const customStyleForIconsBtn = (color) => {
 const Todo = ({ todo, showDelete, showUpdate }) => {
   //context
   const { todos, setTodos } = useContext(TodosContext);
+  const { showHideToast } = useContext(ToastContext);
 
-  // state
-  // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  // const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  // const [updatedTodo, setUpdatedTodo] = useState({ title: "", details: "" });
 
   // event handlers
 
@@ -47,6 +37,7 @@ const Todo = ({ todo, showDelete, showUpdate }) => {
     );
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    showHideToast("تم التحديث بنجاح");
   };
 
   const handleDeleteClick = () => {

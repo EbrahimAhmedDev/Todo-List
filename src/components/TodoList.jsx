@@ -10,6 +10,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Todo from "./Todo";
 import { TodosContext } from "../contexts/todosContext";
+import { ToastContext } from "../contexts/ToastContext";
 import { v4 as uuidv4 } from "uuid";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -24,6 +25,7 @@ function TodoList() {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
   const { todos, setTodos } = useContext(TodosContext);
+  const { showHideToast } = useContext(ToastContext);
 
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
@@ -43,7 +45,6 @@ function TodoList() {
   }, [todos]);
 
   let todosToBeRendered = todos;
-
   if (displayedTodosType == "completed") {
     todosToBeRendered = completedTodos;
   } else if (displayedTodosType == "non-completed") {
@@ -71,6 +72,7 @@ function TodoList() {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
+    showHideToast("تمت اضافة المهمة بنجاح");
   }
   // handlers
   function openDeleteDialog(todo) {
@@ -86,17 +88,13 @@ function TodoList() {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     handleDeleteDialogClose();
+    showHideToast("تم حذف المهمة بنجاح");
   };
 
   function openUpdateDialog(todo) {
     setDialogTodo(todo);
     setShowUpdateDialog(true);
   }
-
-  // const handleUpdateClick = () => {
-  //   setUpdatedTodo({ title: todo.title, details: todo.details });
-  //   setShowUpdateDialog(true);
-  // };
 
   const handleUpdateConfirm = () => {
     const updatedTodos = todos.map((t) =>
@@ -108,6 +106,7 @@ function TodoList() {
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
 
     handleUpdateClose();
+    showHideToast("تم تعديل المهمة بنجاح");
   };
 
   const handleUpdateClose = () => {

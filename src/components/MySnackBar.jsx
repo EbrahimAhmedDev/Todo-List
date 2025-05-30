@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 
-export default function MySnackBar({ open }) {
+export default function MySnackBar({ open, message }) {
   // const handleClose = (event, reason) => {
   //   if (reason === "clickaway") {
   //     return;
@@ -50,7 +50,7 @@ export default function MySnackBar({ open }) {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Hello
+          {message}
         </Alert>
       </Snackbar>
     </div>
