@@ -6,6 +6,7 @@ import { TodosContext } from "./contexts/todosContext";
 
 // others
 // import { v4 as uuidv4 } from "uuid";
+import MySnackBar from "./components/MySnackBar";
 
 const theme = createTheme({
   typography: {
@@ -41,6 +42,14 @@ const theme = createTheme({
 // ];
 const App = () => {
   const [todos, setTodos] = useState([]);
+  const [open, setOpen] = useState(true);
+
+  function showHideToast() {
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,6 +64,7 @@ const App = () => {
           direction: "rtl",
         }}
       >
+        <MySnackBar open={open} />
         <TodosContext.Provider value={{ todos, setTodos }}>
           <TodoList />
         </TodosContext.Provider>
